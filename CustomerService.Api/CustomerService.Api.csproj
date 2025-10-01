@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CustomerService.Application\CustomerService.Application.csproj" />
+    <ProjectReference Include="..\CustomerService.Persistence\CustomerService.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

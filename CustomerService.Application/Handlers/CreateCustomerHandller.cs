@@ -1,0 +1,54 @@
+﻿using CustomerService.Application.Commands;
+using CustomerService.Application.Common;
+using CustomerService.Domain.Entities;
+using CustomerService.Domain.Interfaces;
+using MediatR;
+
+
+namespace CustomerService.Application.Handlers
+{
+    public class CreateCustomerHandler : IRequestHandler<CreateCustomerCommand, Customer>
+    {
+        private readonly ICustomerRepository _customerRepository;
+        private readonly IKycService _kyc;
+
+        public CreateCustomerHandler(ICustomerRepository customerRepository, IKycService kyc)
+        {
+            _customerRepository = customerRepository;
+            _kyc = kyc;
+        }
+
+        public async Task<Customer> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
+        {
+            // Age rule
+            if ((DateTime.UtcNow.Year - request.DateOfBirth.Year) < 18)
+                throw new Exception("Customer must be 18+");
+
+            // National ID validation
+            if (request.NationalId.Length != 11)
+                throw new Exception("Invalid National ID");
+
+            // Call KYC external service
+            var isValid = await _kyc.VerifyAsync(request.NationalId);
+            if (!isValid)
+                throw new Exception("KYC verification failed");
+
+            var customer = new Customer
+            {
+                Id = Guid.NewGuid(),
+                Name = request.Name,
+                Surname = request.Surname,
+                NationalId = request.NationalId,
+                Phone = request.Phone,
+                DateOfBirth = request.DateOfBirth,
+                Type = request.Type,
+                Status = CustomerStatus.Active,
+                Email = request.Email,
+            };
+
+            await _customerRepository.AddAsync(customer);
+           
+            return customer;
+        }
+    }
+}

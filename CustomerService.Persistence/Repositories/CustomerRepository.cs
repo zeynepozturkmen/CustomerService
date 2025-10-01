@@ -37,10 +37,10 @@ namespace CustomerService.Persistence.Repositories
             var existing = await _context.Customers.FindAsync(customer.Id);
             if (existing == null) return null;
 
-            existing.FirstName = customer.FirstName;
-            existing.LastName = customer.LastName;
+            existing.Name = customer.Name;
+            existing.Surname = customer.Surname;
             existing.Email = customer.Email;
-            existing.PhoneNumber = customer.PhoneNumber;
+            existing.Phone = customer.Phone;
 
             await _context.SaveChangesAsync();
             return existing;

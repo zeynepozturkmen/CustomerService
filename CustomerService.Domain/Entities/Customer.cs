@@ -3,23 +3,19 @@
 
 namespace CustomerService.Domain.Entities
 {
+    public enum CustomerType { Individual, Corporate }
+    public enum CustomerStatus { Active, Passive, Blocked }
     public class Customer
     {
-        [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
-
-        [Required, MaxLength(100)]
-        public string FirstName { get; set; } = null!;
-
-        [Required, MaxLength(100)]
-        public string LastName { get; set; } = null!;
-
-        [Required, EmailAddress]
+        public Guid Id { get; set; }
+        public string Name { get; set; } = null!;
+        public string Surname { get; set; } = null!;
+        public string NationalId { get; set; } = null!;
+        public string Phone { get; set; } = null!;
         public string Email { get; set; } = null!;
-
-        [MaxLength(20)]
-        public string? PhoneNumber { get; set; }
-
+        public DateTime DateOfBirth { get; set; }
+        public CustomerType Type { get; set; }
+        public CustomerStatus Status { get; set; } = CustomerStatus.Active;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
