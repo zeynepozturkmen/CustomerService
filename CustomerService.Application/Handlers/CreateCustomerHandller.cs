@@ -28,14 +28,16 @@ namespace CustomerService.Application.Handlers
             if (request.NationalId.Length != 11)
                 throw new Exception("Invalid National ID");
 
+            var userIdNo = Guid.NewGuid();
+
             // Call KYC external service
-            var isValid = await _kyc.VerifyAsync(request.NationalId);
+            var isValid = await _kyc.VerifyAsync(userIdNo.ToString(), request.NationalId, request.DateOfBirth.ToString("yyyy"));
             if (!isValid)
                 throw new Exception("KYC verification failed");
 
             var customer = new Customer
             {
-                Id = Guid.NewGuid(),
+                Id = userIdNo,
                 Name = request.Name,
                 Surname = request.Surname,
                 NationalId = request.NationalId,

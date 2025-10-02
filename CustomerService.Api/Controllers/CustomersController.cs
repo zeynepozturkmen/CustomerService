@@ -1,4 +1,5 @@
 ﻿using CustomerService.Application.Commands;
+using CustomerService.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,5 +24,13 @@ namespace CustomerService.Api.Controllers
             return Ok(customerId);
         }
 
+        // GET: api/customers/{id}
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var query = new GetCustomerByIdQuery(id);
+            var customer = await _mediator.Send(query);
+            return Ok(customer);
+        }
     }
 }

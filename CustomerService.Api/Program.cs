@@ -1,10 +1,8 @@
 using CustomerService.Application.Common;
 using CustomerService.Application.Handlers;
-using CustomerService.Domain.Interfaces;
 using CustomerService.Infrastructure.ExternalServices;
 using CustomerService.Persistence;
-using CustomerService.Persistence.Repositories;
-using System;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,8 +24,6 @@ builder.Services.AddMediatR(cfg =>
 builder.Services.AddPersistence();
 
 builder.Services.AddHttpClient<IKycService, KycService>();
-
-
 
 var app = builder.Build();
 
