@@ -28,6 +28,9 @@ namespace CustomerService.Application.Handlers
             if (request.NationalId.Length != 11)
                 throw new Exception("Invalid National ID");
 
+            if (request.CustomerType == CustomerType.Corporate && String.IsNullOrEmpty(request.TaxNumber))
+                throw new Exception("The tax number is mandatory for corporate customers");
+
             var userIdNo = Guid.NewGuid();
 
             // Call KYC external service
@@ -43,7 +46,8 @@ namespace CustomerService.Application.Handlers
                 NationalId = request.NationalId,
                 Phone = request.Phone,
                 DateOfBirth = request.DateOfBirth,
-                Type = request.Type,
+                Type = request.CustomerType,
+                TaxNumber = request.TaxNumber,
                 Status = CustomerStatus.Active,
                 Email = request.Email,
             };

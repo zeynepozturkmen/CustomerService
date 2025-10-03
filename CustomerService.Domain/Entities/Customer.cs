@@ -11,8 +11,9 @@ namespace CustomerService.Domain.Entities
         public string Name { get; set; } = null!;
         public string Surname { get; set; } = null!;
         public string NationalId { get; set; } = null!;
-        public string Phone { get; set; } = null!;
-        public string Email { get; set; } = null!;
+        public string Phone { get; set; }
+        public string Email { get; set; }
+        public string TaxNumber { get; set; }
         public DateTime DateOfBirth { get; set; }
         public CustomerType Type { get; set; }
         public CustomerStatus Status { get; set; } = CustomerStatus.Active;
