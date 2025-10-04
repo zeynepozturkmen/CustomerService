@@ -40,16 +40,27 @@ namespace CustomerService.Application.Handlers
 
         public async Task CancelPendingTransfersForBlockedCustomerAsync(Guid senderId)
         {
-
-            // Transfer servisi customer blocke) duruma düştüğünde bekleyen transferlerin otomatik iptali, base url örneği:
-            //https://https://localhost:44378/api/Transfer/customerBlocked
-
+            // Payload oluştur
             var payload = new
             {
                 SenderId = senderId
             };
 
-            await _httpClient.PutAsJsonAsync("https://localhost:44378/api/Transfer/customerBlocked", payload);
+            // HttpRequestMessage oluştur
+            // Transfer servisi customer blocked duruma düştüğünde bekleyen transferlerin otomatik iptali, base url örneği:
+            //https://https://localhost:44378/api/Transfer/customerBlocked
+            var request = new HttpRequestMessage(HttpMethod.Put, "https://localhost:44378/api/Transfer/customerBlocked")
+            {
+                Content = JsonContent.Create(payload)
+            };
+
+            // API Key header ekle
+            request.Headers.TryAddWithoutValidation("X-Api-Key", "my-secret-api-key-123");
+
+            // İstek gönder
+            var response = await _httpClient.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
         }
     }
 }

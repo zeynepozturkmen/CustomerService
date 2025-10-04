@@ -1,5 +1,6 @@
 using CustomerService.Application.Common;
 using CustomerService.Application.Handlers;
+using CustomerService.Application.Middleware;
 using CustomerService.Infrastructure.ExternalServices;
 using CustomerService.Persistence;
 
@@ -14,6 +15,12 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
 
+// Auth Service client
+builder.Services.AddHttpClient("AuthService", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:44317"); // Auth Service URL
+});
+
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(CreateCustomerHandler).Assembly);
@@ -25,7 +32,11 @@ builder.Services.AddPersistence();
 
 builder.Services.AddHttpClient<IKycService, KycService>();
 
+builder.Services.AddHttpClient();
+
 var app = builder.Build();
+
+app.UseMiddleware<ExternalAuthMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -33,6 +44,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseHttpsRedirection();
 

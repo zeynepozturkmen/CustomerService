@@ -33,12 +33,9 @@ namespace CustomerService.Api.Controllers
             return Ok(customer);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCustomer(Guid id, [FromBody] UpdateCustomerCommand command)
+        [HttpPut()]
+        public async Task<IActionResult> UpdateCustomer([FromBody] UpdateCustomerCommand command)
         {
-            if (id != command.Id)
-                return BadRequest("Id mismatch");
-
             var result = await _mediator.Send(command);
             if (!result)
                 return NotFound("Customer not found");

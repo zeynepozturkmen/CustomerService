@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+﻿
 
 namespace CustomerService.Domain.Entities
 {
